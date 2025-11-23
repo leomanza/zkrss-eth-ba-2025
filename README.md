@@ -1,8 +1,8 @@
-# ZkRSS: Zero-Knowledge RSS Feed Verification
+# ZKRSS: Zero-Knowledge RSS Feed Verification
 
-**ZkRSS** is a decentralized content provenance system that leverages Zero-Knowledge Proofs (ZKPs) on the Aztec network to ensure the **Authenticity**, **Integrity**, and **Non-Repudiation** of RSS feeds.
+**ZKRSS** is a decentralized content provenance system that leverages Zero-Knowledge Proofs (ZKPs) on the Aztec network to ensure the **Authenticity**, **Integrity**, and **Non-Repudiation** of RSS feeds.
 
-In an era of AI-generated content and misinformation, ZkRSS allows publishers to cryptographically sign their content feeds, enabling readers to verify that an article truly originated from the claimed source and has not been tampered with—all without revealing the entire subscriber list or compromise privacy.
+In an era of AI-generated content and misinformation, ZKRSS allows publishers to cryptographically sign their content feeds, enabling readers to verify that an article truly originated from the claimed source and has not been tampered with—all without revealing the entire subscriber list or compromise privacy.
 
 ---
 
@@ -19,7 +19,7 @@ graph TD
     User[User / Reader] -->|Verifies Proof| App
     Publisher -->|Signs Feed Root| RSS_Service
     RSS_Service -->|Serves RSS + Proofs| App
-    App -->|Verifies via ZK Circuit| Contract[ZkRSS Contract (Aztec)]
+    App -->|Verifies via ZK Circuit| Contract[ZKRSS Contract (Aztec)]
     Contract -->|Returns Validity| App
 ```
 
@@ -27,7 +27,7 @@ graph TD
 
 ## 1. 📜 Contracts (Aztec / Noir)
 
-The heart of ZkRSS is the smart contract deployed on the Aztec network. It enforces cryptographic rules to validate content.
+The heart of ZKRSS is the smart contract deployed on the Aztec network. It enforces cryptographic rules to validate content.
 
 **Location:** `contracts/src/main.nr`
 
@@ -52,7 +52,7 @@ aztec-nargo test     # Run Noir tests
 
 ## 2. 📡 RSS Service
 
-A modern, scalable RSS feed management service built with **Hono.js** and **Upstash Redis**. It acts as the "Publisher" node in the ZkRSS ecosystem.
+A modern, scalable RSS feed management service built with **Hono.js** and **Upstash Redis**. It acts as the "Publisher" node in the ZKRSS ecosystem.
 
 **Location:** `rss-service/`
 
@@ -79,13 +79,13 @@ npm run dev
 
 ## 3. 📱 App (Frontend)
 
-The user interface for interacting with ZkRSS. It demonstrates the flow of publishing content (generating proofs) and reading content (verifying proofs).
+The user interface for interacting with ZKRSS. It demonstrates the flow of publishing content (generating proofs) and reading content (verifying proofs).
 
 **Location:** `app/`
 
 ### Key Features:
 *   **Aztec Wallet Integration**: Connects to the Aztec Sandbox via `EmbeddedWallet`.
-*   **Contract Interaction**: Deploys and interacts with the `ZkRSS` contract directly from the browser.
+*   **Contract Interaction**: Deploys and interacts with the `ZKRSS` contract directly from the browser.
 *   **Publisher Mode**: Allows users to write articles, generate local Merkle Trees, and "publish" them (simulating the Publisher role).
 *   **Reader Mode**: Displays the feed and performs verification of content integrity.
 
@@ -136,7 +136,7 @@ Launch the frontend application.
 bun run dev
 ```
 
-Visit `http://localhost:8080` to use the ZkRSS App!
+Visit `http://localhost:8080` to use the ZKRSS App!
 
 ---
 
