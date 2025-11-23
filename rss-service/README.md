@@ -2,14 +2,6 @@
 
 A lightweight, scalable RSS feed service built with Hono.js and Upstash Redis. This service allows you to create and manage RSS feeds programmatically through a simple REST API.
 
-## Quick Deploy
-
-Deploy your own RSS service with one click:
-
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/template/pfvWZK?referralCode=3O4l1-)
-
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/potlock/rss-service-template)
-
 ## Features
 
 - **Multiple Feed Formats**: Generate RSS 2.0, Atom, and JSON Feed formats
