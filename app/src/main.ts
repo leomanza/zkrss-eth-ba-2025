@@ -74,7 +74,8 @@ async function initWallet() {
 async function deployContract() {
     console.log("Deploying new ZkRSS contract...");
     const deployer = ZkRSSContract.deploy(wallet);
-    const receipt = await deployer.send({}).wait();
+    if (!wallet.connectedAccount) throw new Error("Wallet not connected");
+    const receipt = await deployer.send({ contractAddressSalt: Fr.random(), from: wallet.connectedAccount }).wait();
     contract = receipt.contract;
     contractAddress = contract.address;
     localStorage.setItem('zkrss_contract_address', contractAddress.toString());
@@ -256,6 +257,8 @@ async function publishContent() {
 // --- Reader Logic ---
 function initFeedListener() {
     const container = document.getElementById('feed-container');
+    const feedData = localStorage.getItem(LOCAL_STORAGE_KEY) || 'http://localhost:4001'; // rss-service running locally
+    ;
     if (!container) return;
 
     const existingData = localStorage.getItem(LOCAL_STORAGE_KEY);
