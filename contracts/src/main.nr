@@ -6,7 +6,9 @@ contract ZkRSS {
     use dep::aztec::macros::functions::{initializer, external};
 
     #[dep::aztec::macros::storage::storage]
-    struct Storage<Context> {}
+    struct Storage<Context> {
+        
+    }
 
     #[dep::aztec::macros::functions::external("public")]
     #[dep::aztec::macros::functions::initializer]

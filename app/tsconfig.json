@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "module": "esnext",
+        "target": "es2020",
+        "jsx": "react",
+        "allowJs": true,
+        "moduleResolution": "bundler",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "baseUrl": "..",
+        "paths": {
+            "@aztec/*": [
+                "node_modules/@aztec/*"
+            ]
+        }
+    },
+    "include": [
+        "src/**/*",
+        "artifacts/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ]
+}

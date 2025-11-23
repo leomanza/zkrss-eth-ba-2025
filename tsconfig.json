@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "target": "es2020",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "./app/dist",
+        "rootDir": ".",
+        "baseUrl": ".",
+        "paths": {
+            "@aztec/*": [
+                "./node_modules/@aztec/*"
+            ]
+        },
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true
+    },
+    "include": [
+        "app/src/**/*",
+        "app/artifacts/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ]
+}

@@ -1,0 +1,64 @@
+{
+  "name": "zkrss",
+  "private": false,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "clean": "rm -rf app/dist contracts/target contracts/codegenCache.json",
+    "compile-contracts": "cd contracts && ${AZTEC_NARGO:-aztec-nargo} compile && ${AZTEC_POSTPROCESS:-aztec-postprocess-contract}",
+    "codegen-contracts": "cd contracts && ${AZTEC_BUILDER:-aztec} codegen ./target -o ./target",
+    "copy-artifacts": "mkdir -p app/artifacts && cp contracts/target/*.json contracts/target/*.ts app/artifacts",
+    "build-contracts": "bun clean && bun compile-contracts && bun codegen-contracts && bun copy-artifacts",
+    "deploy-contracts": "node --experimental-transform-types scripts/deploy.ts",
+    "dev": "webpack serve --mode development",
+    "build-app": "webpack --mode production",
+    "build": "bun build-contracts && bun build-app",
+    "serve": "webpack serve --mode production --port ${PORT:-3000}",
+    "prep-test": "PROVER_ENABLED=false bun deploy-contracts && bun build-app",
+    "test": "bun prep-test && bun playwright test",
+    "lint": "prettier --check ./src"
+  },
+  "dependencies": {
+    "@aztec/accounts": "3.0.0-devnet.5",
+    "@aztec/aztec.js": "3.0.0-devnet.5",
+    "@aztec/constants": "3.0.0-devnet.5",
+    "@aztec/foundation": "3.0.0-devnet.5",
+    "@aztec/kv-store": "3.0.0-devnet.5",
+    "@aztec/noir-contracts.js": "3.0.0-devnet.5",
+    "@aztec/pxe": "3.0.0-devnet.5",
+    "@aztec/stdlib": "3.0.0-devnet.5",
+    "@aztec/test-wallet": "3.0.0-devnet.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.52.0",
+    "@types/bun": "latest",
+    "@types/node": "^22.15.17",
+    "assert": "^2.1.0",
+    "buffer": "^6.0.3",
+    "copy-webpack-plugin": "^13.0.1",
+    "crypto-browserify": "^3.12.1",
+    "css-loader": "^6.10.0",
+    "dotenv-webpack": "^8.0.1",
+    "html-webpack-plugin": "^5.6.0",
+    "prettier": "^3.5.3",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
+    "style-loader": "^3.3.4",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.7.3",
+    "util": "^0.12.5",
+    "webpack": "^5.99.6",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.1"
+  },
+  "prettier": {
+    "semi": true,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "packageManager": "bun@4.7.0+sha512.5a0afa1d4c1d844b3447ee3319633797bcd6385d9a44be07993ae52ff4facabccafb4af5dcd1c2f9a94ac113e5e9ff56f6130431905884414229e284e37bb7c9"
+}

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>zkRSS Prototype</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CDN for simplicity as per plan, though webpack could handle it too -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        aztec: {
+                            bg: '#0f172a', // Slate 900
+                            card: '#1e293b', // Slate 800
+                            primary: '#6366f1', // Indigo 500
+                            accent: '#818cf8', // Indigo 400
+                            success: '#10b981', // Emerald 500
+                            error: '#ef4444', // Red 500
+                            text: '#f8fafc', // Slate 50
+                            muted: '#94a3b8', // Slate 400
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="min-h-screen flex flex-col items-center py-10 px-4">
+
+    <!-- Main Container -->
+    <div class="w-full max-w-4xl bg-aztec-card rounded-2xl shadow-2xl overflow-hidden border border-slate-700">
+
+        <!-- Header -->
+        <header class="bg-slate-900/50 p-6 border-b border-slate-700 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div
+                    class="w-10 h-10 bg-aztec-primary rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold tracking-tight text-white">zkRSS <span
+                        class="text-aztec-accent text-sm font-medium ml-1">Prototype</span></h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div id="auth-status"
+                    class="hidden text-sm text-aztec-muted bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 flex items-center space-x-2">
+                    <span class="w-2 h-2 bg-aztec-success rounded-full" id="auth-dot"></span>
+                    <span id="user-id-display">Connecting...</span>
+                </div>
+                <button id="create-account-btn"
+                    class="bg-aztec-primary hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-lg shadow-indigo-500/20">
+                    Create Account
+                </button>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="flex border-b border-slate-700 bg-slate-800/50">
+            <button id="tab-publisher"
+                class="flex-1 py-4 text-center font-medium text-aztec-muted hover:text-white hover:bg-slate-700/50 transition-colors border-b-2 border-transparent">
+                Publisher (Prover)
+            </button>
+            <button id="tab-reader"
+                class="flex-1 py-4 text-center font-medium text-aztec-muted hover:text-white hover:bg-slate-700/50 transition-colors border-b-2 border-transparent">
+                Reader (Verifier)
+            </button>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="p-6 min-h-[500px]">
+
+            <!-- Publisher View -->
+            <div id="view-publisher" class="hidden space-y-6">
+                <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-700">
+                    <h2 class="text-xl font-semibold text-white mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-aztec-primary" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                            </path>
+                        </svg>
+                        Compose Article
+                    </h2>
+                    <textarea id="article-content"
+                        class="w-full h-48 bg-slate-800 text-white p-4 rounded-lg border border-slate-600 focus:border-aztec-primary focus:ring-1 focus:ring-aztec-primary outline-none resize-none placeholder-slate-500 transition-all"
+                        placeholder="Write your article content here... This content will be hashed and signed."></textarea>
+                    <div class="mt-4 flex justify-between items-center">
+                        <p class="text-xs text-aztec-muted">Content will be cryptographically committed.</p>
+                        <button id="publish-btn" disabled
+                            class="bg-aztec-primary hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-lg font-medium transition-all shadow-lg shadow-indigo-500/20 flex items-center">
+                            <span id="publish-spinner"
+                                class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
+                            Sign & Publish
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reader View -->
+            <div id="view-reader" class="hidden space-y-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-white flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-aztec-success" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Live Feed
+                    </h2>
+                    <span class="text-xs text-aztec-muted bg-slate-800 px-2 py-1 rounded">Auto-verifying</span>
+                </div>
+                <div id="feed-container" class="space-y-4">
+                    <!-- Feed items will be injected here -->
+                    <div class="text-center text-aztec-muted py-10">Waiting for new blocks...</div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Message Box -->
+    <div id="message-box"
+        class="fixed bottom-6 right-6 max-w-sm w-full bg-slate-800 border border-slate-700 rounded-lg shadow-2xl p-4 hidden transform transition-all z-50">
+        <div class="flex items-start">
+            <div class="flex-shrink-0" id="msg-icon">
+                <!-- Icon injected via JS -->
+            </div>
+            <div class="ml-3 w-0 flex-1 pt-0.5">
+                <p class="text-sm font-medium text-white" id="msg-title">Notification</p>
+                <p class="mt-1 text-sm text-aztec-muted" id="msg-body">Message content</p>
+            </div>
+            <div class="ml-4 flex-shrink-0 flex">
+                <button id="close-msg-btn"
+                    class="bg-transparent rounded-md inline-flex text-slate-400 hover:text-slate-200 focus:outline-none">
+                    <span class="sr-only">Close</span>
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
